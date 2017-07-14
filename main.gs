@@ -8,20 +8,14 @@ function carManage() {
          return;
        }
        if (val.getName().substring(0,6) == nextMonthyearday("yyyyMM",0) || val.getName().substring(0,6) == nextMonthyearday("yyyyMM",-1)){
-        targetfiles.push(val);
+        data = carManageCheck(val,data);
        }
     })
-    
-    
-    targetfiles
-    Logger.log(targetfiles);
- // var targetsp = SpreadsheetApp.open(file)
-  
-  
+  SpreadsheetApp.getActiveSpreadsheet().getSheetByName("法定点検").getDataRange().setValues(data);
 }
 
 
-function carManageCheck(spItelator,data2Dim,incr) {
+function carManageCheck(spItelator,data2Dim) {
  var sheet = SpreadsheetApp.open(spItelator);
  var sheets = sheet.getSheets();
  var sheetnam = sheet.getNumSheets();
@@ -30,21 +24,21 @@ function carManageCheck(spItelator,data2Dim,incr) {
    var shopname = sheets[n].getName();//シート名称
    var shopsheetdata = sheets[n].getRange(7,1,sheets[n].getLastRow(),sheets[n].getLastColumn()).getValues();
     for (var i = 0;i <= data2Dim.length - 1;i++){//リストのデータ用
-     var stringData = data2Dim[i][10].toString();
-     if(stringData.substring(0,5) != "３ヶ月点検" && stringData.substring(0,5) != "６ヶ月点検"){//3
-      continue;
-     }else{
-       var checkdata = data2Dim[i][26];
+      if(data2Dim[i][5] == "" || data2Dim[i][0] == "※"){
+        continue;
       }
-       for (var j = 0;j <= shopsheetdata.length - 1;j++){//編集シートのデータ用
-         var checksheetdata = shopsheetdata[j][1].toString();//管理番号
-         if(checkdata == checksheetdata){
-          shopsheetdata[j][7] = data2Dim[i][41];
-          shopsheetdata[j][5] = data2Dim[i][16];
+      var checkdata = data2Dim[i][1];
+        for (var j = 0;j <= shopsheetdata.length - 1;j++){//編集シートのデータ用
+          var checksheetdata = shopsheetdata[j][1].toString();//管理番号
+          if(checkdata == checksheetdata){
+            shopsheetdata[j][6] = "済" + Utilities.formatDate(data2Dim[i][5],'Asia/Tokyo','yyyyMM')
+            data2Dim[i][0] = "※"
           break;
          }
        }
     }
    sheets[n].getRange(7,1,sheets[n].getLastRow(),sheets[n].getLastColumn()).setValues(shopsheetdata);
   }
+  return data2Dim
 }
+
