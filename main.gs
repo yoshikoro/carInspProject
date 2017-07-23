@@ -31,7 +31,7 @@ function carManageCheck(spItelator,data2Dim) {
         for (var j = 0;j <= shopsheetdata.length - 1;j++){//編集シートのデータ用
           var checksheetdata = shopsheetdata[j][1].toString();//管理番号
           if(checkdata == checksheetdata){
-            shopsheetdata[j][6] = "済" + Utilities.formatDate(data2Dim[i][5],'Asia/Tokyo','yyyyMM')
+            shopsheetdata[j][6] = "済" + Utilities.formatDate(data2Dim[i][5],'Asia/Tokyo','yyyyMMdd')
             data2Dim[i][0] = "※"
           break;
          }
